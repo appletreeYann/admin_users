@@ -2,79 +2,79 @@ import { create } from "zustand";
 import { jwtDecode } from "jwt-decode";
 import { toast } from "react-toastify";
 
-// Endpoint de tu backend local
-const url = "http://adminusers.local:8081";
-
-// Recuperar token de localStorage al iniciar
 const storageToken = () => localStorage.getItem("token") || "";
 
-// Decodificar rol desde el token
-const decodeRole = (token) => {
+// Verifica si el token aún es válido
+const isTokenValid = (token) => {
   try {
-    const decoded = jwt_decode(token);
+    const decoded = jwtDecode(token);
+    return decoded.exp * 1000 > Date.now(); // comparar en milisegundos
+  } catch {
+    return false;
+  }
+};
+
+// Obtener rol (si es válido)
+const getRole = (token) => {
+  try {
+    const decoded = jwtDecode(token);
     return decoded.role || null;
   } catch {
     return null;
   }
 };
 
-export const useAuthStore = create((set) => ({
-  token: storageToken(),
-  role: decodeRole(storageToken()),
-  isLoading: false, // <- nuevo
+export const useAuthStore = create((set) => {
+  const token = storageToken();
+  const valid = isTokenValid(token);
 
-  authenticate: async ({ email, password }) => {
-    set({ isLoading: true }); // inicia carga
+  return {
+    token: valid ? token : "",
+    role: valid ? getRole(token) : null,
+    isLoading: false,
 
-    try {
-      const response = await fetch(`${url}/login.php`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email, password }),
-      });
+    authenticate: async ({ email, password }) => {
+      set({ isLoading: true });
 
-      const result = await response.json();
+      try {
+        const response = await fetch("http://adminusers.local:8081/login.php", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ email, password }),
+        });
 
-      if (!response.ok) {
-        throw new Error(result.message || "Error al iniciar sesión");
+        const result = await response.json();
+
+        if (!response.ok) {
+          throw new Error(result.message || "Error al iniciar sesión");
+        }
+
+        const token = result.token;
+
+        localStorage.setItem("token", token);
+
+        set({
+          token,
+          role: getRole(token),
+          isLoading: false,
+        });
+
+        toast.success("Inicio de sesión exitoso", { autoClose: 3000 });
+        return true;
+
+      } catch (error) {
+        set({ isLoading: false });
+        toast.error(`Error: ${error.message}`, { autoClose: 3000 });
+        return false;
       }
+    },
 
-      const token = result.token;
-
-      localStorage.setItem("token", token);
-
-      set(() => ({
-        token,
-        role: decodeRole(token),
-        isLoading: false // ← termina carga con éxito
-      }));
-
-      toast.success("Inicio de sesión exitoso", {
-        position: "top-right",
-        autoClose: 3000,
-      });
-
-      return true;
-
-    } catch (error) {
-      toast.error(`Error: ${error.message}`, {
-        position: "top-right",
-        autoClose: 3000,
-      });
-
-      set({ isLoading: false }); // ← termina carga con error
-      return false;
+    logout: () => {
+      localStorage.removeItem("token");
+      set({ token: "", role: null });
+      toast.info("Sesión cerrada", { autoClose: 2000 });
     }
-  },
-
-  logout: () => {
-    localStorage.removeItem("token");
-    set(() => ({
-      token: "",
-      role: null,
-    }));
-  },
-}));
-
+  };
+});

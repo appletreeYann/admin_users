@@ -1,63 +1,42 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
-import { useAuthStore } from "./stores/useAuthStore"; // asegúrate de ajustar la ruta
-
-// Páginas
+import { useAuthStore } from "./stores/useAuthStore";
+import AppLayout from "./layouts/AppLayout";
 import LoginPage from "./pages/LoginPage";
 import ProfilePage from "./pages/ProfilePage";
 import UsersPage from "./pages/UsersPage";
 import NotFoundPage from "./pages/NotFoundPage";
+import SessionGuard from "./SessionGuard";
 
 export default function AppRouter() {
   const { token, role } = useAuthStore();
-
   const isAuthenticated = Boolean(token);
 
   return (
     <Router>
-      <Routes>
-        {/* Página raíz: redirecciona automáticamente */}
-        <Route
-          path="/"
-          element={
-            isAuthenticated
-              ? <Navigate to="/profile" />
-              : <Navigate to="/login" />
-          }
-        />
+      <SessionGuard>
+        <Routes>
+          <Route path="/" element={<Navigate to="/profile" />} />
 
-        {/* Login: solo si no estás autenticado */}
-        <Route
-          path="/login"
-          element={
-            isAuthenticated
-              ? <Navigate to="/profile" />
-              : <LoginPage />
-          }
-        />
+          <Route
+            path="/login"
+            element={
+              isAuthenticated ? <Navigate to="/profile" /> : <LoginPage />
+            }
+          />
 
-        {/* Perfil: requiere autenticación */}
-        <Route
-          path="/profile"
-          element={
-            isAuthenticated
-              ? <ProfilePage />
-              : <Navigate to="/login" />
-          }
-        />
+          {/* Rutas privadas dentro del layout */}
+          {isAuthenticated && (
+            <Route element={<AppLayout />}>
+              <Route path="/profile" element={<ProfilePage />} />
+              {role === "superadmin" && (
+                <Route path="/users" element={<UsersPage />} />
+              )}
+            </Route>
+          )}
 
-        {/* Users: solo para superadmin */}
-        <Route
-          path="/users"
-          element={
-            isAuthenticated && role === "superadmin"
-              ? <UsersPage />
-              : <Navigate to="/login" />
-          }
-        />
-
-        {/* Ruta no encontrada */}
-        <Route path="*" element={<NotFoundPage />} />
-      </Routes>
+          <Route path="*" element={<NotFoundPage />} />
+        </Routes>
+      </SessionGuard>
     </Router>
   );
 }

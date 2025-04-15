@@ -33,23 +33,25 @@ export default function LoginView() {
         <h1 className="py-7 font-bold text-black text-3xl">Iniciar sesión</h1>
       </div>
 
-      {isLoading && (
-        <div className="text-center text-gray-600 my-4">
-          <Spinner />
-        </div>
-      )}
+      
 
       <form
         onSubmit={handleSubmit(handleLogin)}
         className="space-y-8 p-10 bg-white rounded-sm border border-gray-300 shadow-lg"
         noValidate
       >
+        {isLoading && (
+          <div className="text-center text-gray-600 my-4">
+            <Spinner />
+          </div>
+        )}
         <div className="flex flex-col gap-5">
           <label className="font-normal text-2xl">Correo electrónico</label>
           <input
             id="email"
             type="email"
             placeholder="ejemplo@correo.com"
+            disabled={isLoading}
             className="w-full p-3 border-gray-300 border rounded-lg"
             {...register("email", {
               required: "Introduzca su correo",
