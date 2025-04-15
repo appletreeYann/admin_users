@@ -21,6 +21,7 @@
 /backend/storage/
 # Optional lockfiles
 /backend/composer.lock
+/backend/config.php 
 
 # === COMÚN A AMBOS ===
 *.log
