@@ -129,7 +129,7 @@ export default function UsersPage() {
         <div className="flex justify-end mb-4">
           <button
             onClick={() => setShowCreateModal(true)}
-            className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
+            className="bg-teal-400 text-white px-4 py-2 rounded hover:bg-green-700"
           >
             ➕ Crear nuevo usuario
           </button>
@@ -160,13 +160,13 @@ export default function UsersPage() {
                   onClick={() => openEditModal(user)}
                   className="text-blue-600 hover:underline"
                 >
-                  ✏️ Editar
+                   Editar
                 </button>
                 <button
                   onClick={() => handleDelete(user.id)}
                   className="text-red-600 hover:underline"
                 >
-                  🗑 Eliminar
+                   Eliminar
                 </button>
               </td>
             </tr>
