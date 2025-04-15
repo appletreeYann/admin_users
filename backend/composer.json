@@ -1,0 +1,13 @@
+{
+    "name": "mac/backend",
+    "description": "Backend del login",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Mac\\Backend\\": "src/"
+        }
+    },
+    "require": {
+        "firebase/php-jwt": "^6.11"
+    }
+}

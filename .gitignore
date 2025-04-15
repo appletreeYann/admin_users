@@ -1,0 +1,36 @@
+# === FRONTEND (React, Vite, etc.) ===
+/frontend/node_modules/
+/frontend/.env
+/frontend/.env.local
+/frontend/.env.development
+/frontend/.env.production
+/frontend/.DS_Store
+/frontend/dist/
+/frontend/build/
+# Optional lockfiles
+/frontend/yarn.lock
+/frontend/package-lock.json
+/frontend/pnpm-lock.yaml
+
+# === BACKEND (PHP + Composer) ===
+/backend/vendor/
+/backend/.env
+/backend/.env.local
+/backend/.DS_Store
+/backend/*.log
+/backend/storage/
+# Optional lockfiles
+/backend/composer.lock
+
+# === COMÚN A AMBOS ===
+*.log
+*.swp
+*.swo
+.DS_Store
+*.bak
+*.tmp
+
+# === CONFIGURACIÓN DE EDITORES ===
+.vscode/
+.idea/
+*.code-workspace
