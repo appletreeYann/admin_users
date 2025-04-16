@@ -3,6 +3,7 @@ import { Dialog, Transition } from "@headlessui/react";
 import { useAuthStore } from "../stores/useAuthStore";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import Spinner from "../components/Spinner";
 
 export default function UsersPage() {
   const token = useAuthStore((state) => state.token);
@@ -119,7 +120,7 @@ export default function UsersPage() {
     setCurrentUser({ ...currentUser, [name]: value });
   };
 
-  if (loading) return <p className="text-center mt-10">🔄 Cargando usuarios...</p>;
+  if (loading) return <div className="w-full mt-60 py-16 flex items-center justify-center"> <Spinner /> </div>;
 
   return (
     <div className="max-w-6xl mx-auto mt-10 p-6 bg-white rounded shadow">
@@ -129,9 +130,9 @@ export default function UsersPage() {
         <div className="flex justify-end mb-4">
           <button
             onClick={() => setShowCreateModal(true)}
-            className="bg-teal-400 text-white px-4 py-2 rounded hover:bg-green-700"
+            className="bg-teal-400 text-white px-4 py-2 rounded hover:bg-teal-600 hover:cursor-pointer"
           >
-            ➕ Crear nuevo usuario
+            Crear nuevo usuario
           </button>
         </div>
       )}

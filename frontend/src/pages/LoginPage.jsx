@@ -29,6 +29,13 @@ export default function LoginView() {
 
   return (
     <>
+    {isLoading ? (
+          <div className="w-full mt-60 py-20 flex items-center justify-center">
+            <Spinner />
+          </div>
+      ) : 
+      
+      <div className="w-full py-20 flex flex-col items-center">
       <div className="flex flex-col items-center">
         <h1 className="py-7 font-bold text-black text-3xl">Iniciar sesión</h1>
       </div>
@@ -37,14 +44,9 @@ export default function LoginView() {
 
       <form
         onSubmit={handleSubmit(handleLogin)}
-        className="space-y-8 p-10 bg-white rounded-sm border border-gray-300 shadow-lg"
+        className="space-y-8 p-10 bg-white rounded-sm border border-gray-300 shadow-lg w-[500px]"
         noValidate
       >
-        {isLoading && (
-          <div className="text-center text-gray-600 my-4">
-            <Spinner />
-          </div>
-        )}
         <div className="flex flex-col gap-5">
           <label className="font-normal text-2xl">Correo electrónico</label>
           <input
@@ -83,6 +85,10 @@ export default function LoginView() {
           className="bg-black hover:bg-gray-800 w-full p-3 text-white font-black text-xl cursor-pointer transition rounded-lg"
         />
       </form>
+
+    </div>
+    
+    }
 
       <ToastContainer />
     </>

@@ -15,7 +15,7 @@ export default function AppRouter() {
     <Router>
       <SessionGuard>
         <Routes>
-          <Route path="/" element={<Navigate to="/profile" />} />
+          <Route path="/" element={<Navigate to="/login" />} />
 
           <Route
             path="/login"
